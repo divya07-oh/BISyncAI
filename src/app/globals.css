@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #F6F8FB;
+  --color-foreground: #102A43;
+
+  --color-card: #FFFFFF;
+  --color-card-foreground: #102A43;
+
+  --color-primary: #102A43;
+  --color-primary-foreground: #FFFFFF;
+
+  --color-accent: #176B87;
+  --color-accent-foreground: #FFFFFF;
+
+  --color-highlight: #4FA3C7;
+
+  --color-success: #27805A;
+  --color-success-foreground: #FFFFFF;
+
+  --color-warning: #D9941E;
+  --color-warning-foreground: #FFFFFF;
+
+  --color-error: #C94C4C;
+  --color-error-foreground: #FFFFFF;
+
+  --color-border: #E2E8F0;
+  --color-input: #FFFFFF;
+  
+  --radius-lg: 8px;
+  --radius-md: 6px;
+  --radius-sm: 4px;
+}
+
+@layer base {
+  *, ::before, ::after {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+}
+
+/* Subtle grid pattern */
+.bg-grid-pattern {
+  background-image: linear-gradient(to right, #E2E8F0 1px, transparent 1px),
+    linear-gradient(to bottom, #E2E8F0 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Hide scrollbar for clean UI */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
