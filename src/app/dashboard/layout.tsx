@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="bg-primary p-1.5 rounded-lg shadow-sm">
               <ShieldCheck className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-primary">BIS AI</span>
+            <span className="text-xl font-bold tracking-tight text-primary">BISync AI</span>
           </Link>
         </div>
         

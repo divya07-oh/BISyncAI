@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShieldCheck, LogIn, Command } from "lucide-react";
+import { ShieldCheck, LogIn, Command, Search } from "lucide-react";
 
 export default function Navbar() {
   return (
@@ -9,7 +9,7 @@ export default function Navbar() {
           <div className="bg-primary p-1.5 rounded-lg shadow-sm">
             <ShieldCheck className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-primary">BIS AI</span>
+          <span className="text-xl font-bold tracking-tight text-primary">BISync AI</span>
         </Link>
         
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
@@ -20,9 +20,16 @@ export default function Navbar() {
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="hidden lg:flex items-center gap-1.5 text-xs font-medium text-slate-400 bg-background border border-border px-2 py-1 rounded-md mr-2">
-            <Command className="h-3 w-3" /> K
-          </div>
+          <button 
+            onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
+            className="hidden lg:flex items-center gap-2 text-sm text-slate-500 bg-background border border-border hover:border-slate-300 transition-colors px-3 py-1.5 rounded-lg mr-2"
+          >
+            <Search className="h-4 w-4" />
+            <span>Search...</span>
+            <div className="flex items-center gap-1 text-[10px] font-semibold text-slate-400 bg-card border border-border px-1.5 py-0.5 rounded ml-2">
+              <Command className="h-3 w-3" /> K
+            </div>
+          </button>
           <Link href="/login" className="hidden sm:flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors">
             <LogIn className="h-4 w-4" />
             Login
