@@ -10,8 +10,8 @@ const filters = ["All", "Electrical", "Construction", "Food", "Mechanical", "Env
 const mockStandards = [
   { id: "IS 10322", title: "LED Luminaires", category: "Electrical", viewed: "Today", status: "Saved" },
   { id: "IS 302", title: "Electrical Appliances", category: "Electrical", viewed: "Sep 26", status: "Saved" },
-  { id: "IS 9873", title: "Toys Safety", category: "Consumer", viewed: "Sep 21", status: "Saved" },
-  { id: "IS 16000", title: "Air Quality", category: "Environment", viewed: "Sep 18", status: "Saved" }
+  { id: "IS 16107", title: "Performance Requirements for LED Lighting", category: "Electrical", viewed: "Sep 21", status: "Saved" },
+  { id: "IS 9001", title: "Quality Management Systems", category: "Quality Management", viewed: "Sep 18", status: "Saved" }
 ];
 
 export default function SavedStandardsPage() {

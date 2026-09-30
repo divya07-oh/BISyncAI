@@ -1,27 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle, AlertTriangle, XCircle, ArrowRight, ShieldCheck, FileText, ChevronRight, Check } from "lucide-react";
+import { CheckCircle, AlertTriangle, XCircle, ArrowRight, ShieldCheck, FileText, Check, Camera, Image as ImageIcon, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
+import UploadProductModal from "@/components/UploadProductModal";
+import { useLanguage } from "@/lib/LanguageContext";
 
-const STEPS = ["Product", "Standards", "Requirements", "Results"];
+const STEPS = ["Product", "Standards & Docs", "Requirements", "Results"];
 
 export default function ComplianceCheckerPage() {
   const [step, setStep] = useState(1);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [productImage, setProductImage] = useState<string | null>(null);
+  const { t } = useLanguage();
+
+  const handleImageAdded = (src: string) => {
+    setProductImage(src);
+    toast.success("Product image added successfully");
+  };
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 animate-in fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-primary tracking-tight">Compliance Checker</h1>
+        <h1 className="text-xl md:text-2xl font-bold text-primary tracking-tight">{t("Compliance Checker")}</h1>
         <p className="text-sm text-slate-500 mt-1">Verify product specifications against mandatory BIS requirements.</p>
       </div>
 
       {/* Professional Progress Indicator */}
-      <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
-        <div className="flex items-center justify-between relative max-w-3xl mx-auto">
-          <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-0.5 bg-slate-100 -z-10" />
-          <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-0.5 bg-accent -z-10 transition-all duration-500" style={{ width: `${((step - 1) / (STEPS.length - 1)) * 100}%` }} />
+      <div className="bg-card border border-border rounded-xl p-4 shadow-sm overflow-x-auto">
+        <div className="flex items-center justify-between relative min-w-[300px] max-w-3xl mx-auto">
+          <div className="absolute left-4 right-4 md:left-8 md:right-8 top-1/2 -translate-y-1/2 h-0.5 bg-slate-100 -z-10" />
+          <div className="absolute left-4 right-4 md:left-8 md:right-8 top-1/2 -translate-y-1/2 h-0.5 bg-accent -z-10 transition-all duration-500" style={{ width: `${((step - 1) / (STEPS.length - 1)) * 100}%` }} />
           
           {STEPS.map((label, i) => {
             const currentStep = i + 1;
@@ -31,15 +41,15 @@ export default function ComplianceCheckerPage() {
             return (
               <div key={label} className="flex flex-col items-center gap-2">
                 <div className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all shadow-sm border-2",
+                  "w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-[10px] md:text-xs font-bold transition-all shadow-sm border-2",
                   isCompleted ? "bg-accent border-accent text-white" : 
                   isActive ? "bg-white border-accent text-accent" : 
                   "bg-white border-border text-slate-400"
                 )}>
-                  {isCompleted ? <Check className="h-4 w-4" /> : currentStep}
+                  {isCompleted ? <Check className="h-3 w-3 md:h-4 md:w-4" /> : currentStep}
                 </div>
                 <div className={cn(
-                  "text-xs font-bold uppercase tracking-wider hidden sm:block",
+                  "text-[9px] md:text-xs font-bold uppercase tracking-wider hidden sm:block text-center",
                   isActive ? "text-accent" : "text-slate-400"
                 )}>
                   {label}
@@ -51,24 +61,39 @@ export default function ComplianceCheckerPage() {
       </div>
 
       {step === 1 && (
-        <div className="bg-card border border-border rounded-xl p-6 sm:p-8 max-w-2xl mx-auto shadow-sm animate-in fade-in slide-in-from-bottom-4">
+        <div className="bg-card border border-border rounded-xl p-5 md:p-8 max-w-2xl mx-auto shadow-sm animate-in fade-in slide-in-from-bottom-4">
           <h2 className="text-lg font-bold text-primary mb-6">Step 1: Product Information</h2>
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-primary mb-1.5">Product Name</label>
               <input type="text" defaultValue="LED Street Light" className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-primary focus:outline-none focus:ring-2 focus:ring-accent/50 text-sm shadow-sm" />
             </div>
+            
             <div>
-              <label className="block text-sm font-semibold text-primary mb-1.5">Product Category</label>
-              <select className="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-primary focus:outline-none focus:ring-2 focus:ring-accent/50 text-sm shadow-sm">
-                <option>Lighting Equipment</option>
-                <option>Household Appliances</option>
-                <option>Electronics</option>
-              </select>
+              <label className="block text-sm font-semibold text-primary mb-1.5">Product Image (Optional)</label>
+              {productImage ? (
+                <div className="relative rounded-xl overflow-hidden border border-border shadow-sm group">
+                  <img src={productImage} alt="Product" className="w-full h-48 object-cover bg-slate-50" />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => setIsUploadOpen(true)} className="bg-white text-primary font-bold px-4 py-2 rounded-lg text-sm shadow-sm flex items-center gap-2">
+                      <Camera className="h-4 w-4" /> Change Image
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => setIsUploadOpen(true)}
+                  className="w-full border-2 border-dashed border-border rounded-xl p-8 hover:bg-slate-50 hover:border-accent transition-colors flex flex-col items-center justify-center text-slate-500 hover:text-accent gap-2"
+                >
+                  <ImageIcon className="h-8 w-8" />
+                  <span className="font-bold text-sm">+ Add Product Image</span>
+                </button>
+              )}
             </div>
+
             <button 
               onClick={() => setStep(2)}
-              className="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-semibold transition-all mt-6 flex items-center justify-center gap-2 shadow-sm text-sm"
+              className="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-semibold transition-all mt-6 flex items-center justify-center gap-2 shadow-sm text-sm min-h-[44px]"
             >
               Continue <ArrowRight className="h-4 w-4" />
             </button>
@@ -77,41 +102,89 @@ export default function ComplianceCheckerPage() {
       )}
 
       {step === 2 && (
-        <div className="bg-card border border-border rounded-xl p-6 sm:p-8 max-w-2xl mx-auto shadow-sm animate-in fade-in slide-in-from-bottom-4">
-          <h2 className="text-lg font-bold text-primary mb-6">Step 2: Identified Standards</h2>
-          <p className="text-sm text-slate-500 mb-6">Based on your product, the following standards are mandatory for compliance.</p>
+        <div className="bg-card border border-border rounded-xl p-5 md:p-8 max-w-2xl mx-auto shadow-sm animate-in fade-in slide-in-from-bottom-4">
+          <h2 className="text-lg font-bold text-primary mb-2">Step 2: Recommendations</h2>
+          <p className="text-sm text-slate-500 mb-6">AI has identified the following applicable standards and required documents.</p>
           
-          <div className="space-y-3 mb-8">
-            <div className="flex items-start gap-4 p-4 border border-accent/20 bg-accent/5 rounded-lg">
-              <div className="bg-accent/10 p-2 rounded shrink-0">
-                <ShieldCheck className="h-5 w-5 text-accent" />
-              </div>
-              <div>
-                <h3 className="font-bold text-primary text-sm">IS 10322</h3>
-                <p className="text-xs text-slate-600 mt-1">LED Modules for General Lighting. Primary standard covering safety and performance testing.</p>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-bold text-primary uppercase tracking-wider mb-3">Recommended Standards</h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-4 p-4 border border-accent/20 bg-accent/5 rounded-lg">
+                  <div className="bg-accent/10 p-2 rounded shrink-0">
+                    <ShieldCheck className="h-5 w-5 text-accent" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-primary text-sm">IS 10322</h3>
+                      <span className="text-[10px] bg-accent text-white px-1.5 py-0.5 rounded font-bold">94% MATCH</span>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">LED Modules for General Lighting.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4 p-4 border border-border bg-background rounded-lg">
+                  <div className="bg-slate-100 p-2 rounded shrink-0">
+                    <ShieldCheck className="h-5 w-5 text-slate-500" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-primary text-sm">IS 302</h3>
+                      <span className="text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-bold">88% MATCH</span>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">Safety of Household and Similar Electrical Appliances.</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex items-start gap-4 p-4 border border-border bg-background rounded-lg">
-              <div className="bg-slate-100 p-2 rounded shrink-0">
-                <ShieldCheck className="h-5 w-5 text-slate-500" />
-              </div>
-              <div>
-                <h3 className="font-bold text-primary text-sm">IS 302 (Part 1)</h3>
-                <p className="text-xs text-slate-600 mt-1">General electrical safety requirements for mains-connected devices.</p>
+
+            <div>
+              <h3 className="text-sm font-bold text-primary uppercase tracking-wider mb-3">Documents to Add for This Product</h3>
+              <p className="text-xs text-slate-500 mb-3 italic">Recommended for compliance review. Requirements may vary depending on product, application, and applicable standard.</p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-background">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-4 w-4 text-slate-400" />
+                    <div>
+                      <span className="text-sm font-bold text-primary block">Product Specification Sheet</span>
+                      <span className="text-[10px] text-slate-500 block">Helps identify product characteristics</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-warning bg-warning/10 px-2 py-1 rounded">Missing</span>
+                </div>
+                <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-background">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-4 w-4 text-slate-400" />
+                    <div>
+                      <span className="text-sm font-bold text-primary block">Electrical Safety Test Report</span>
+                      <span className="text-[10px] text-slate-500 block">Safety compliance proof</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-warning bg-warning/10 px-2 py-1 rounded">Missing</span>
+                </div>
+                <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-background">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-4 w-4 text-success" />
+                    <div>
+                      <span className="text-sm font-bold text-primary block">User / Installation Manual</span>
+                      <span className="text-[10px] text-slate-500 block">End-user instructions</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-success bg-success/10 px-2 py-1 rounded">Uploaded</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 mt-8">
             <button 
               onClick={() => setStep(1)}
-              className="flex-1 bg-background border border-border hover:bg-slate-50 text-slate-600 py-3 rounded-lg font-semibold transition-all text-sm shadow-sm"
+              className="flex-1 bg-background border border-border hover:bg-slate-50 text-slate-600 py-3 rounded-lg font-semibold transition-all text-sm shadow-sm min-h-[44px]"
             >
               Back
             </button>
             <button 
               onClick={() => setStep(3)}
-              className="flex-[2] bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-sm text-sm"
+              className="flex-[2] bg-primary hover:bg-primary/90 text-white py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-sm text-sm min-h-[44px]"
             >
               Configure Requirements
             </button>
@@ -120,47 +193,49 @@ export default function ComplianceCheckerPage() {
       )}
 
       {step === 3 && (
-        <div className="bg-card border border-border rounded-xl p-6 sm:p-8 max-w-3xl mx-auto shadow-sm animate-in fade-in slide-in-from-bottom-4">
+        <div className="bg-card border border-border rounded-xl p-5 md:p-8 max-w-3xl mx-auto shadow-sm animate-in fade-in slide-in-from-bottom-4">
           <h2 className="text-lg font-bold text-primary mb-6">Step 3: Provide Evidence</h2>
-          <div className="space-y-6 mb-8">
-            <div className="border border-border rounded-xl p-4">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-sm text-primary">LM-79 Photometric Report</h3>
-                <span className="text-[10px] font-bold uppercase text-slate-400 bg-slate-100 px-2 py-1 rounded">Required</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <button className="bg-accent/10 text-accent text-xs font-bold px-4 py-2 rounded-lg border border-accent/20 flex items-center gap-2 hover:bg-accent/20 transition-colors">
-                  <FileText className="h-4 w-4" /> Upload Report
-                </button>
+          <div className="space-y-4 md:space-y-6 mb-8">
+            <div className="border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-bold text-sm text-primary">LM-79 Photometric Report</h3>
+                  <span className="text-[10px] font-bold uppercase text-slate-400 bg-slate-100 px-2 py-1 rounded">Required</span>
+                </div>
                 <span className="text-xs text-slate-500">No file selected.</span>
               </div>
+              <button className="bg-accent/10 text-accent text-xs font-bold px-4 py-2.5 rounded-lg border border-accent/20 flex items-center justify-center gap-2 hover:bg-accent/20 transition-colors w-full sm:w-auto min-h-[44px]">
+                <Upload className="h-4 w-4" /> Upload
+              </button>
             </div>
             
-            <div className="border border-border rounded-xl p-4">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-sm text-primary">IP65 Ingress Protection Certificate</h3>
-                <span className="text-[10px] font-bold uppercase text-slate-400 bg-slate-100 px-2 py-1 rounded">Required</span>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-success/5 border border-success/20 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-success" />
-                  <span className="text-sm font-semibold text-primary">IP65_Test_Report_NABL.pdf</span>
+            <div className="border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-bold text-sm text-primary">IP65 Ingress Protection Certificate</h3>
+                  <span className="text-[10px] font-bold uppercase text-slate-400 bg-slate-100 px-2 py-1 rounded">Required</span>
                 </div>
-                <CheckCircle className="h-5 w-5 text-success" />
+              </div>
+              <div className="flex items-center justify-between p-2.5 bg-success/5 border border-success/20 rounded-lg w-full sm:w-auto">
+                <div className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-success" />
+                  <span className="text-xs font-semibold text-primary truncate max-w-[150px]">IP65_Report.pdf</span>
+                </div>
+                <CheckCircle className="h-4 w-4 text-success ml-3" />
               </div>
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-3 md:gap-4">
             <button 
               onClick={() => setStep(2)}
-              className="flex-1 bg-background border border-border hover:bg-slate-50 text-slate-600 py-3 rounded-lg font-semibold transition-all text-sm shadow-sm"
+              className="flex-1 bg-background border border-border hover:bg-slate-50 text-slate-600 py-3 rounded-lg font-semibold transition-all text-sm shadow-sm min-h-[44px]"
             >
               Back
             </button>
             <button 
               onClick={() => setStep(4)}
-              className="flex-[2] bg-accent hover:bg-accent/90 text-white py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-md text-sm"
+              className="flex-[2] bg-accent hover:bg-accent/90 text-white py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-md text-sm min-h-[44px]"
             >
               <ShieldCheck className="h-4 w-4" />
               Generate Matrix
@@ -172,12 +247,13 @@ export default function ComplianceCheckerPage() {
       {step === 4 && (
         <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
           
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 bg-card border border-border rounded-xl p-6 shadow-sm">
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-card border border-border rounded-xl p-5 md:p-6 shadow-sm">
               <h2 className="text-xl font-bold text-primary mb-2">Compliance Overview</h2>
               <p className="text-sm text-slate-500 mb-6">Generated matrix for <strong className="text-primary font-bold">LED Street Light</strong>.</p>
               
-              <div className="bg-background/50 border border-border rounded-lg overflow-hidden">
+              {/* Responsive Table / Cards */}
+              <div className="hidden sm:block bg-background/50 border border-border rounded-lg overflow-hidden">
                 <table className="w-full text-sm text-left">
                   <thead className="text-[11px] font-bold text-slate-500 uppercase bg-slate-50 border-b border-border">
                     <tr>
@@ -204,14 +280,6 @@ export default function ComplianceCheckerPage() {
                         <AlertTriangle className="h-4 w-4 text-warning inline-block" />
                       </td>
                     </tr>
-                    <tr className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-4 py-3 font-semibold text-primary text-xs">Marking / Labeling</td>
-                      <td className="px-4 py-3 text-xs text-slate-500"><span className="bg-primary/5 border border-primary/10 px-1.5 py-0.5 rounded text-primary font-bold">IS 10322</span></td>
-                      <td className="px-4 py-3 text-xs text-slate-600">Draft uploaded</td>
-                      <td className="px-4 py-3 text-center">
-                        <CheckCircle className="h-4 w-4 text-success inline-block" />
-                      </td>
-                    </tr>
                     <tr className="hover:bg-slate-50/50 transition-colors bg-error/5">
                       <td className="px-4 py-3 font-semibold text-primary text-xs">Documentation</td>
                       <td className="px-4 py-3 text-xs text-slate-500"><span className="bg-primary/5 border border-primary/10 px-1.5 py-0.5 rounded text-primary font-bold">BIS Manual</span></td>
@@ -222,6 +290,42 @@ export default function ComplianceCheckerPage() {
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile Cards for Table */}
+              <div className="sm:hidden space-y-4">
+                <div className="border border-border rounded-lg p-4 bg-background">
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="font-bold text-primary text-sm">Electrical safety</h4>
+                    <CheckCircle className="h-5 w-5 text-success" />
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-slate-500">
+                    <span><span className="bg-primary/5 border border-primary/10 px-1.5 py-0.5 rounded text-primary font-bold mr-2">IS 302</span></span>
+                    <span>Test Report</span>
+                  </div>
+                </div>
+                
+                <div className="border border-border rounded-lg p-4 bg-background">
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="font-bold text-primary text-sm">Photometric perf.</h4>
+                    <AlertTriangle className="h-5 w-5 text-warning" />
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-slate-500">
+                    <span><span className="bg-primary/5 border border-primary/10 px-1.5 py-0.5 rounded text-primary font-bold mr-2">IS 10322</span></span>
+                    <span>Pending upload</span>
+                  </div>
+                </div>
+
+                <div className="border border-error/30 rounded-lg p-4 bg-error/5">
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="font-bold text-primary text-sm">Documentation</h4>
+                    <XCircle className="h-5 w-5 text-error" />
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-slate-500">
+                    <span><span className="bg-primary/5 border border-primary/10 px-1.5 py-0.5 rounded text-primary font-bold mr-2">BIS Manual</span></span>
+                    <span className="text-error font-medium">Missing</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -240,10 +344,10 @@ export default function ComplianceCheckerPage() {
               
               <p className="text-xs text-slate-400 mt-2 italic flex items-center gap-1 justify-center bg-slate-50 px-2 py-1 rounded border border-border">
                 <AlertTriangle className="h-3 w-3" />
-                Mock assessment — demonstration data
+                Demo assessment result
               </p>
 
-              <button onClick={() => toast.success('Compliance report PDF is downloading...')} className="w-full mt-6 bg-background border border-border hover:bg-slate-50 text-primary py-2 rounded-lg font-semibold transition-colors text-sm shadow-sm flex items-center justify-center gap-2">
+              <button onClick={() => toast.success('Compliance report PDF is downloading...')} className="w-full mt-6 bg-background border border-border hover:bg-slate-50 text-primary py-3 rounded-lg font-semibold transition-colors text-sm shadow-sm flex items-center justify-center gap-2 min-h-[44px]">
                 Download PDF Report
               </button>
             </div>
@@ -252,13 +356,19 @@ export default function ComplianceCheckerPage() {
           <div className="flex justify-center mt-6">
             <button 
               onClick={() => setStep(1)}
-              className="text-xs font-bold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors"
+              className="text-xs font-bold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors p-3 min-h-[44px]"
             >
               Reset Checker
             </button>
           </div>
         </div>
       )}
+
+      <UploadProductModal 
+        isOpen={isUploadOpen} 
+        onClose={() => setIsUploadOpen(false)} 
+        onUploadSuccess={handleImageAdded} 
+      />
     </div>
   );
 }
