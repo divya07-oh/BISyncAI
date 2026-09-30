@@ -198,7 +198,7 @@ export default function ComplianceCheckerPage() {
           <div className="space-y-4 md:space-y-6 mb-8">
             <div className="border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
                   <h3 className="font-bold text-sm text-primary">LM-79 Photometric Report</h3>
                   <span className="text-[10px] font-bold uppercase text-slate-400 bg-slate-100 px-2 py-1 rounded">Required</span>
                 </div>
@@ -211,7 +211,7 @@ export default function ComplianceCheckerPage() {
             
             <div className="border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
                   <h3 className="font-bold text-sm text-primary">IP65 Ingress Protection Certificate</h3>
                   <span className="text-[10px] font-bold uppercase text-slate-400 bg-slate-100 px-2 py-1 rounded">Required</span>
                 </div>

@@ -76,14 +76,18 @@ export default function UploadTenderModal({ isOpen, onClose, onUploadSuccess }: 
                   <span className="text-xs text-slate-500 mt-1">Select file from your device</span>
                 </label>
 
-                <button 
-                  onClick={handleCameraScan}
-                  className="flex flex-col items-center justify-center p-6 bg-slate-50 border-2 border-solid border-slate-200 rounded-2xl hover:border-primary hover:bg-primary/5 transition-all group min-h-[44px]"
-                >
+                <label className="relative flex flex-col items-center justify-center p-6 bg-slate-50 border-2 border-solid border-slate-200 rounded-2xl hover:border-primary hover:bg-primary/5 transition-all cursor-pointer group min-h-[44px]">
+                  <input 
+                    type="file" 
+                    accept="image/jpeg, image/png, image/webp"
+                    capture="environment" 
+                    className="hidden" 
+                    onChange={handleFileUpload}
+                  />
                   <Camera className="h-8 w-8 text-slate-400 group-hover:text-primary mb-3" />
                   <span className="font-bold text-primary group-hover:text-primary">Camera Scan</span>
                   <span className="text-xs text-slate-500 mt-1">Photograph tender pages</span>
-                </button>
+                </label>
               </div>
             </div>
           )}

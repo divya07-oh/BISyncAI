@@ -16,47 +16,6 @@ export default function UploadProductModal({ isOpen, onClose, onUploadSuccess }:
   const [uploadState, setUploadState] = useState<UploadState>("selection");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-  };
-
-  const startCamera = async () => {
-    setErrorMsg(null);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-      setUploadState("camera");
-    } catch (err) {
-      setErrorMsg("Camera access is unavailable. Please upload an image instead.");
-    }
-  };
-
-  const capturePhoto = () => {
-    if (videoRef.current) {
-      const canvas = document.createElement("canvas");
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL("image/jpeg");
-        setImageSrc(dataUrl);
-        stopCamera();
-        setUploadState("preview");
-      }
-    }
-  };
-
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -70,9 +29,9 @@ export default function UploadProductModal({ isOpen, onClose, onUploadSuccess }:
   };
 
   const handleClose = () => {
-    stopCamera();
     setImageSrc(null);
     setUploadState("selection");
+    setErrorMsg(null);
     onClose();
   };
 
@@ -83,6 +42,8 @@ export default function UploadProductModal({ isOpen, onClose, onUploadSuccess }:
       handleClose();
     }, 1500);
   };
+
+
 
   if (!isOpen) return null;
 
@@ -135,37 +96,18 @@ export default function UploadProductModal({ isOpen, onClose, onUploadSuccess }:
                   <span className="text-xs text-slate-500 mt-1">Choose an image from your phone</span>
                 </label>
 
-                <button 
-                  onClick={startCamera}
-                  className="flex flex-col items-center justify-center p-6 bg-slate-50 border-2 border-solid border-slate-200 rounded-2xl hover:border-primary hover:bg-primary/5 transition-all group min-h-[44px]"
-                >
+                <label className="relative flex flex-col items-center justify-center p-6 bg-slate-50 border-2 border-solid border-slate-200 rounded-2xl hover:border-primary hover:bg-primary/5 transition-all cursor-pointer group min-h-[44px]">
+                  <input 
+                    type="file" 
+                    accept="image/jpeg, image/png, image/webp"
+                    capture="environment" 
+                    className="hidden" 
+                    onChange={handleFileUpload}
+                  />
                   <Camera className="h-8 w-8 text-slate-400 group-hover:text-primary mb-3" />
                   <span className="font-bold text-primary group-hover:text-primary">Open Camera</span>
                   <span className="text-xs text-slate-500 mt-1">Take a picture of your product</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {uploadState === "camera" && (
-            <div className="flex flex-col items-center space-y-6">
-              <div className="w-full aspect-[4/3] bg-black rounded-xl overflow-hidden relative">
-                <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
-                <div className="absolute inset-0 border-2 border-white/20 rounded-xl m-4 pointer-events-none"></div>
-              </div>
-              <div className="flex gap-4 w-full">
-                <button 
-                  onClick={() => { stopCamera(); setUploadState("selection"); }}
-                  className="flex-1 py-3 px-4 rounded-xl border border-border font-bold text-slate-600 hover:bg-slate-50 min-h-[44px]"
-                >
-                  Cancel
-                </button>
-                <button 
-                  onClick={capturePhoto}
-                  className="flex-1 py-3 px-4 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 flex items-center justify-center gap-2 min-h-[44px]"
-                >
-                  <Camera className="h-5 w-5" /> Capture
-                </button>
+                </label>
               </div>
             </div>
           )}
