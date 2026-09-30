@@ -6,6 +6,9 @@ import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import UploadProductModal from "@/components/UploadProductModal";
 import { useLanguage } from "@/lib/LanguageContext";
+import HelpModal from "@/components/HelpModal";
+import ReportGeneratorModal from "@/components/ReportGeneratorModal";
+import { HelpCircle } from "lucide-react";
 
 const STEPS = ["Product", "Standards & Docs", "Requirements", "Results"];
 
@@ -13,6 +16,8 @@ export default function ComplianceCheckerPage() {
   const [step, setStep] = useState(1);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [productImage, setProductImage] = useState<string | null>(null);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isReportGenerating, setIsReportGenerating] = useState(false);
   const { t } = useLanguage();
 
   const handleImageAdded = (src: string) => {
@@ -22,9 +27,40 @@ export default function ComplianceCheckerPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 animate-in fade-in">
-      <div>
-        <h1 className="text-xl md:text-2xl font-bold text-primary tracking-tight">{t("Compliance Checker")}</h1>
-        <p className="text-sm text-slate-500 mt-1">Verify product specifications against mandatory BIS requirements.</p>
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold text-primary tracking-tight">{t("Compliance Checker")}</h1>
+          <p className="text-sm text-slate-500 mt-1">Verify product specifications against mandatory BIS requirements.</p>
+        </div>
+        <button 
+          onClick={() => setIsHelpOpen(true)}
+          className="flex items-center gap-1.5 text-sm text-accent hover:text-accent/80 font-medium bg-accent/10 px-3 py-1.5 rounded-full transition-colors w-fit"
+        >
+          <HelpCircle className="h-4 w-4" />
+          How to check compliance?
+        </button>
+      </div>
+
+      {/* Help Card */}
+      <div className="bg-gradient-to-r from-accent/5 to-transparent border border-accent/20 rounded-xl p-5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-4 opacity-5">
+          <ShieldCheck className="h-24 w-24 text-accent" />
+        </div>
+        <div className="relative z-10">
+          <h3 className="font-bold text-primary text-sm mb-3">How does Compliance Checker work?</h3>
+          <ol className="list-decimal list-inside text-sm text-slate-600 space-y-1 mb-4 font-medium">
+            <li>Add your product</li>
+            <li>Review standards</li>
+            <li>Upload documents</li>
+            <li>Review identified gaps</li>
+          </ol>
+          <button 
+            onClick={() => setIsHelpOpen(true)}
+            className="text-xs font-bold text-accent hover:underline uppercase tracking-wider"
+          >
+            [ View Full Guide ]
+          </button>
+        </div>
       </div>
 
       {/* Professional Progress Indicator */}
@@ -347,13 +383,13 @@ export default function ComplianceCheckerPage() {
                 Demo assessment result
               </p>
 
-              <button onClick={() => toast.success('Compliance report PDF is downloading...')} className="w-full mt-6 bg-background border border-border hover:bg-slate-50 text-primary py-3 rounded-lg font-semibold transition-colors text-sm shadow-sm flex items-center justify-center gap-2 min-h-[44px]">
-                Download PDF Report
+              <button onClick={() => setIsReportGenerating(true)} className="w-full mt-6 bg-background border border-border hover:bg-slate-50 text-primary py-3 rounded-lg font-semibold transition-colors text-sm shadow-sm flex items-center justify-center gap-2 min-h-[44px]">
+                Generate Report
               </button>
             </div>
           </div>
           
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 mb-12 sm:mb-0">
             <button 
               onClick={() => setStep(1)}
               className="text-xs font-bold uppercase tracking-wider text-accent hover:text-accent/80 transition-colors p-3 min-h-[44px]"
@@ -364,10 +400,32 @@ export default function ComplianceCheckerPage() {
         </div>
       )}
 
+      {/* Mobile Action Bar for Report */}
+      {step === 4 && (
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-card border-t border-border z-40 sm:hidden">
+          <button onClick={() => setIsReportGenerating(true)} className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 min-h-[48px]">
+            Generate Report
+          </button>
+        </div>
+      )}
+
       <UploadProductModal 
         isOpen={isUploadOpen} 
         onClose={() => setIsUploadOpen(false)} 
         onUploadSuccess={handleImageAdded} 
+      />
+
+      <HelpModal 
+        isOpen={isHelpOpen} 
+        onClose={() => setIsHelpOpen(false)} 
+        type="compliance" 
+      />
+
+      <ReportGeneratorModal
+        isOpen={isReportGenerating}
+        onClose={() => setIsReportGenerating(false)}
+        title="Compliance Review"
+        subtitle="LED Street Light"
       />
     </div>
   );

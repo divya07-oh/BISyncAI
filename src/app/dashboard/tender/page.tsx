@@ -5,12 +5,17 @@ import { UploadCloud, FileText, Download, Save, Target, BookOpen, AlertTriangle,
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import UploadTenderModal from "@/components/UploadTenderModal";
+import HelpModal from "@/components/HelpModal";
+import ReportGeneratorModal from "@/components/ReportGeneratorModal";
+import { HelpCircle } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
 
 export default function TenderAnalysisPage() {
   const [analyzed, setAnalyzed] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isReportGenerating, setIsReportGenerating] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     standards: true,
     technical: true,
@@ -35,11 +40,43 @@ export default function TenderAnalysisPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 font-sans">
-      <div>
-        <h1 className="text-xl md:text-2xl font-bold text-primary tracking-tight">{t("Tender Analysis")}</h1>
-        <p className="text-sm text-slate-500 mt-1">Extract standards, requirements, and compliance gaps using document intelligence.</p>
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 font-sans pb-20 md:pb-8">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold text-primary tracking-tight">{t("Tender Analysis")}</h1>
+          <p className="text-sm text-slate-500 mt-1">Extract standards, requirements, and compliance gaps using document intelligence.</p>
+        </div>
+        <button 
+          onClick={() => setIsHelpOpen(true)}
+          className="flex items-center gap-1.5 text-sm text-accent hover:text-accent/80 font-medium bg-accent/10 px-3 py-1.5 rounded-full transition-colors w-fit"
+        >
+          <HelpCircle className="h-4 w-4" />
+          How to analyze a tender?
+        </button>
       </div>
+
+      {/* Tender Analysis Help Card */}
+      {!analyzed && !isAnalyzing && (
+        <div className="bg-gradient-to-r from-accent/5 to-transparent border border-accent/20 rounded-xl p-5 relative overflow-hidden max-w-2xl mx-auto mt-6">
+          <div className="absolute top-0 right-0 p-4 opacity-5">
+            <FileText className="h-24 w-24 text-accent" />
+          </div>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h3 className="font-bold text-primary text-sm mb-2">New to Tender Analysis?</h3>
+              <p className="text-sm text-slate-600 font-medium max-w-md leading-relaxed">
+                Upload a tender PDF and BIS AI will organize key requirements, standards and review items automatically.
+              </p>
+            </div>
+            <button 
+              onClick={() => setIsHelpOpen(true)}
+              className="text-xs font-bold text-white bg-accent px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors shrink-0"
+            >
+              How It Works
+            </button>
+          </div>
+        </div>
+      )}
 
       {!analyzed ? (
         <div className="max-w-2xl mx-auto mt-8 md:mt-12 animate-in fade-in zoom-in-95">
@@ -101,8 +138,8 @@ export default function TenderAnalysisPage() {
               <button onClick={() => toast.success('Analysis saved to projects')} className="flex-1 sm:flex-none justify-center items-center gap-2 bg-background border border-border hover:bg-slate-50 text-slate-600 px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold transition-colors min-h-[44px] sm:min-h-0">
                 <Save className="h-3.5 w-3.5" /> Save
               </button>
-              <button onClick={() => toast.success('Report download started')} className="flex-1 sm:flex-none justify-center items-center gap-2 bg-primary hover:bg-primary/90 text-white px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold transition-colors shadow-sm min-h-[44px] sm:min-h-0">
-                <Download className="h-3.5 w-3.5" /> Download
+              <button onClick={() => setIsReportGenerating(true)} className="flex-1 sm:flex-none justify-center items-center gap-2 bg-primary hover:bg-primary/90 text-white px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold transition-colors shadow-sm min-h-[44px] sm:min-h-0 hidden md:flex">
+                <FileText className="h-3.5 w-3.5" /> Generate Report
               </button>
             </div>
           </div>
@@ -281,6 +318,28 @@ export default function TenderAnalysisPage() {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUploadSuccess={handleUploadSuccess}
+      />
+
+      {/* Mobile Action Bar for Report */}
+      {analyzed && (
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-card border-t border-border z-40 md:hidden">
+          <button onClick={() => setIsReportGenerating(true)} className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 min-h-[48px]">
+            Generate Tender Report
+          </button>
+        </div>
+      )}
+
+      <HelpModal 
+        isOpen={isHelpOpen} 
+        onClose={() => setIsHelpOpen(false)} 
+        type="tender" 
+      />
+
+      <ReportGeneratorModal
+        isOpen={isReportGenerating}
+        onClose={() => setIsReportGenerating(false)}
+        title="TN-2026-184 Tender Analysis"
+        subtitle="Tender requirement extraction report"
       />
     </div>
   );

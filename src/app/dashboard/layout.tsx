@@ -44,6 +44,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     "English", "தமிழ்", "हिन्दी", "తెలుగు", "ಕನ್ನಡ", "മലയാളം", "मराठी"
   ];
 
+  const [isLanguageSheetOpen, setIsLanguageSheetOpen] = useState(false);
+
   const SidebarContent = () => (
     <>
       <div className="h-16 flex items-center px-6 border-b border-border justify-between">
@@ -81,6 +83,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </Link>
           );
         })}
+        
+        <div className="pt-4 mt-4 border-t border-border md:hidden">
+          <button 
+            onClick={() => setIsLanguageSheetOpen(true)}
+            className="flex items-center justify-between w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <Globe className="h-5 w-5 text-slate-400" />
+              Language
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-primary font-bold">{language}</span>
+              <span className="text-xs">▼</span>
+            </div>
+          </button>
+        </div>
       </div>
       
       <div className="p-4 border-t border-border">
@@ -114,6 +132,49 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       )}>
         <SidebarContent />
       </aside>
+
+      {/* Mobile Language Bottom Sheet */}
+      {isLanguageSheetOpen && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/60 z-[60] md:hidden transition-opacity"
+            onClick={() => setIsLanguageSheetOpen(false)}
+          />
+          <div className="fixed bottom-0 left-0 right-0 bg-card rounded-t-3xl shadow-2xl z-[70] flex flex-col md:hidden transform transition-transform duration-300 translate-y-0">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h2 className="text-lg font-bold text-primary">Select Language</h2>
+              <button onClick={() => setIsLanguageSheetOpen(false)} className="p-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="p-4 space-y-2 max-h-[60vh] overflow-y-auto">
+              {languages.map((l) => (
+                <button
+                  key={l}
+                  onClick={() => {
+                    setLanguage(l as any);
+                    setIsLanguageSheetOpen(false);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={cn(
+                    "w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all",
+                    language === l 
+                      ? "bg-accent/10 border-accent/30" 
+                      : "bg-background border-border hover:bg-slate-50"
+                  )}
+                >
+                  <span className={cn("text-base", language === l ? "font-bold text-accent" : "font-medium text-slate-600")}>
+                    {l}
+                  </span>
+                  <div className={cn("w-5 h-5 rounded-full border-2 flex items-center justify-center", language === l ? "border-accent bg-accent" : "border-slate-300")}>
+                    {language === l && <div className="w-2 h-2 rounded-full bg-white" />}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">

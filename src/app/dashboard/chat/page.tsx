@@ -5,6 +5,7 @@ import { MessageSquare, Send, Mic, ExternalLink, Bookmark, Copy, Info, CheckCirc
 import toast from "react-hot-toast";
 import UploadProductModal from "@/components/UploadProductModal";
 import { useLanguage } from "@/lib/LanguageContext";
+import HelpModal from "@/components/HelpModal";
 
 // --- Mock Database for NLU ---
 const MOCK_DB = {
@@ -72,6 +73,7 @@ export default function ChatPage() {
   const [isTyping, setIsTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   
   // Conversational Context
   const [currentProductContext, setCurrentProductContext] = useState<string | null>(null);
@@ -301,9 +303,17 @@ export default function ChatPage() {
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col relative h-full">
-        {/* Mobile Header */}
-        <div className="md:hidden bg-card border-b border-border p-3 flex items-center justify-between">
-          <h2 className="font-bold text-primary">{t("AI Assistant")}</h2>
+        {/* Header */}
+        <div className="bg-card border-b border-border p-3 flex items-center justify-between z-10 shrink-0">
+          <h2 className="font-bold text-primary md:hidden">{t("AI Assistant")}</h2>
+          <div className="hidden md:block" />
+          <button 
+            onClick={() => setIsHelpOpen(true)}
+            className="flex items-center gap-1.5 text-xs text-accent hover:text-accent/80 font-medium bg-accent/10 px-2.5 py-1 rounded-full transition-colors w-fit"
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
+            How to ask AI?
+          </button>
         </div>
 
         {/* Chat Messages */}
@@ -505,6 +515,12 @@ export default function ChatPage() {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUploadSuccess={handleImageUpload}
+      />
+
+      <HelpModal 
+        isOpen={isHelpOpen} 
+        onClose={() => setIsHelpOpen(false)} 
+        type="chat" 
       />
     </div>
   );

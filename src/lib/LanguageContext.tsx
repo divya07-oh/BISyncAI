@@ -226,7 +226,20 @@ const translations: Record<Language, Record<string, string>> = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>("English");
+  const [language, setLanguageState] = useState<Language>("English");
+
+  // Read from localStorage on mount
+  React.useEffect(() => {
+    const saved = localStorage.getItem("bis-ai-language");
+    if (saved && Object.keys(translations).includes(saved)) {
+      setLanguageState(saved as Language);
+    }
+  }, []);
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem("bis-ai-language", lang);
+  };
 
   const t = (key: string) => {
     return translations[language][key] || key;
