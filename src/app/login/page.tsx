@@ -98,7 +98,7 @@ export default function LoginPage() {
                 >
                   <div>
                     <label className="block text-sm font-semibold text-primary mb-1.5">Sign in with mobile</label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full max-w-full">
                       <div className="bg-background border border-border px-4 py-3 rounded-lg flex items-center justify-center text-slate-600 font-medium shrink-0">
                         +91
                       </div>
@@ -107,7 +107,7 @@ export default function LoginPage() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="98765 43210"
-                        className="flex-1 min-w-0 bg-background border border-border rounded-lg px-4 py-3 text-primary focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all placeholder:text-slate-400"
+                        className="flex-1 w-full min-w-0 bg-background border border-border rounded-lg px-4 py-3 text-primary focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all placeholder:text-slate-400"
                         autoFocus
                       />
                     </div>

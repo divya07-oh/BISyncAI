@@ -11,7 +11,11 @@ const mockStandards = [
   { id: "IS 10322", title: "LED Luminaires", category: "Electrical", viewed: "Today", status: "Saved" },
   { id: "IS 302", title: "Electrical Appliances", category: "Electrical", viewed: "Sep 26", status: "Saved" },
   { id: "IS 16107", title: "Performance Requirements for LED Lighting", category: "Electrical", viewed: "Sep 21", status: "Saved" },
-  { id: "IS 9001", title: "Quality Management Systems", category: "Quality Management", viewed: "Sep 18", status: "Saved" }
+  { id: "IS 16000", title: "Indoor Air Quality", category: "Environment", viewed: "Sep 20", status: "Saved" },
+  { id: "IS 9873", title: "Safety of Toys", category: "Consumer", viewed: "Sep 19", status: "Saved" },
+  { id: "IS 9001", title: "Quality Management Systems", category: "Quality Management", viewed: "Sep 18", status: "Saved" },
+  { id: "IS 15644", title: "Safety of Industrial Trucks", category: "Mechanical", viewed: "Sep 15", status: "Saved" },
+  { id: "IS 17025", title: "Testing and Calibration Laboratories", category: "Quality Management", viewed: "Sep 10", status: "Saved" }
 ];
 
 export default function SavedStandardsPage() {
@@ -24,6 +28,12 @@ export default function SavedStandardsPage() {
 
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 animate-in fade-in">
+      <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 flex items-start gap-2 mb-2">
+        <AlertTriangle className="h-4 w-4 text-warning mt-0.5 shrink-0" />
+        <p className="text-xs text-slate-600">
+          <strong>Demo Data:</strong> The standards, relevance scores, and descriptions shown here are for demonstration purposes only and do not represent official BIS determinations.
+        </p>
+      </div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-primary tracking-tight">Saved Standards</h1>

@@ -364,7 +364,10 @@ export default function ChatPage() {
                     {/* Standards Recommendation */}
                     {msg.data?.standards && msg.data.standards.length > 0 && (
                       <div>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Standard Recommendation</h4>
+                        <div className="flex items-center gap-2 mb-3">
+                          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Standard Recommendation</h4>
+                          <span className="text-[9px] bg-warning/10 text-warning px-1.5 py-0.5 rounded font-bold uppercase tracking-wider border border-warning/20">Demo Data</span>
+                        </div>
                         <div className="grid sm:grid-cols-2 gap-3">
                           {msg.data.standards.map((std, idx) => (
                             <div key={idx} className="bg-card border border-border rounded-xl p-4 shadow-sm hover:border-accent/30 transition-colors">
