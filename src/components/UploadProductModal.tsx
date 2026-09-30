@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { Camera, Upload, X, Check, Image as ImageIcon } from "lucide-react";
+import CameraCapture from "./CameraCapture";
 import { cn } from "@/lib/utils";
 
 interface UploadProductModalProps {
@@ -96,20 +97,27 @@ export default function UploadProductModal({ isOpen, onClose, onUploadSuccess }:
                   <span className="text-xs text-slate-500 mt-1">Choose an image from your phone</span>
                 </label>
 
-                <label className="relative flex flex-col items-center justify-center p-6 bg-slate-50 border-2 border-solid border-slate-200 rounded-2xl hover:border-primary hover:bg-primary/5 transition-all cursor-pointer group min-h-[44px]">
-                  <input 
-                    type="file" 
-                    accept="image/jpeg, image/png, image/webp"
-                    capture="environment" 
-                    className="hidden" 
-                    onChange={handleFileUpload}
-                  />
+                <button 
+                  type="button"
+                  onClick={() => setUploadState("camera")}
+                  className="relative flex flex-col items-center justify-center p-6 bg-slate-50 border-2 border-solid border-slate-200 rounded-2xl hover:border-primary hover:bg-primary/5 transition-all cursor-pointer group min-h-[44px] w-full"
+                >
                   <Camera className="h-8 w-8 text-slate-400 group-hover:text-primary mb-3" />
                   <span className="font-bold text-primary group-hover:text-primary">Open Camera</span>
                   <span className="text-xs text-slate-500 mt-1">Take a picture of your product</span>
-                </label>
+                </button>
               </div>
             </div>
+          )}
+
+          {uploadState === "camera" && (
+            <CameraCapture 
+              onCapture={(src) => {
+                setImageSrc(src);
+                setUploadState("preview");
+              }} 
+              onCancel={() => setUploadState("selection")} 
+            />
           )}
 
           {uploadState === "preview" && (

@@ -210,6 +210,79 @@ export default function Home() {
             </div>
           </div>
         </section>
+        {/* How to use Section */}
+        <section className="w-full py-24 bg-card border-t border-border">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="text-center max-w-2xl mx-auto mb-16">
+              <h2 className="text-3xl font-bold text-primary mb-4">How it works</h2>
+              <p className="text-slate-600">Simple steps to streamline your compliance and tender workflows.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-12">
+              {/* Compliance Checker Instructions */}
+              <div className="bg-background border border-border p-8 rounded-2xl shadow-sm hover:border-success/30 transition-colors">
+                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-border">
+                  <div className="h-12 w-12 bg-success/10 rounded-xl flex items-center justify-center text-success">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-primary">Compliance Checker</h3>
+                    <p className="text-sm text-slate-500">Verify product requirements</p>
+                  </div>
+                </div>
+                
+                <ul className="space-y-6 relative before:absolute before:inset-y-0 before:left-4 before:w-0.5 before:bg-border">
+                  <li className="relative pl-10">
+                    <div className="absolute left-[0.55rem] top-1 w-3 h-3 rounded-full bg-success z-10 ring-4 ring-background"></div>
+                    <h4 className="font-bold text-primary text-sm mb-1">1. Add Your Product</h4>
+                    <p className="text-xs text-slate-600">Enter product name or capture a photo.</p>
+                  </li>
+                  <li className="relative pl-10">
+                    <div className="absolute left-[0.55rem] top-1 w-3 h-3 rounded-full bg-success z-10 ring-4 ring-background"></div>
+                    <h4 className="font-bold text-primary text-sm mb-1">2. Review Standards</h4>
+                    <p className="text-xs text-slate-600">AI automatically finds relevant IS codes.</p>
+                  </li>
+                  <li className="relative pl-10">
+                    <div className="absolute left-[0.55rem] top-1 w-3 h-3 rounded-full bg-success z-10 ring-4 ring-background"></div>
+                    <h4 className="font-bold text-primary text-sm mb-1">3. Generate Matrix</h4>
+                    <p className="text-xs text-slate-600">Instantly view and download compliance gaps.</p>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Tender Analysis Instructions */}
+              <div className="bg-background border border-border p-8 rounded-2xl shadow-sm hover:border-warning/30 transition-colors">
+                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-border">
+                  <div className="h-12 w-12 bg-warning/10 rounded-xl flex items-center justify-center text-warning">
+                    <FileText className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-primary">Tender Analysis</h3>
+                    <p className="text-sm text-slate-500">Extract standards from documents</p>
+                  </div>
+                </div>
+                
+                <ul className="space-y-6 relative before:absolute before:inset-y-0 before:left-4 before:w-0.5 before:bg-border">
+                  <li className="relative pl-10">
+                    <div className="absolute left-[0.55rem] top-1 w-3 h-3 rounded-full bg-warning z-10 ring-4 ring-background"></div>
+                    <h4 className="font-bold text-primary text-sm mb-1">1. Upload Tender</h4>
+                    <p className="text-xs text-slate-600">Upload PDF or scan document with the camera.</p>
+                  </li>
+                  <li className="relative pl-10">
+                    <div className="absolute left-[0.55rem] top-1 w-3 h-3 rounded-full bg-warning z-10 ring-4 ring-background"></div>
+                    <h4 className="font-bold text-primary text-sm mb-1">2. Let AI Read</h4>
+                    <p className="text-xs text-slate-600">System identifies hidden standard references.</p>
+                  </li>
+                  <li className="relative pl-10">
+                    <div className="absolute left-[0.55rem] top-1 w-3 h-3 rounded-full bg-warning z-10 ring-4 ring-background"></div>
+                    <h4 className="font-bold text-primary text-sm mb-1">3. Review Gaps</h4>
+                    <p className="text-xs text-slate-600">Check required documents before submission.</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="border-t border-border bg-card py-8 text-center text-slate-500 text-xs font-medium">
